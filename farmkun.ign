@@ -1,0 +1,20 @@
+{
+  "ignition": {
+    "version": "3.4.0"
+  },
+  "passwd": {
+    "users": [
+      {
+        "groups": [
+          "wheel",
+          "sudo"
+        ],
+        "name": "core",
+        "passwordHash": "$1$82024$51fV6RLyDo3oFsfkc3H7S/",
+        "sshAuthorizedKeys": [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFBQm/e9Ej4PuQuo/M2IV0/IxGAOE83oMnBCwBn2WAaP"
+        ]
+      }
+    ]
+  }
+}
