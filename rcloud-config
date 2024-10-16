@@ -1,0 +1,3 @@
+#cloud-config
+ssh_authorized_keys:
+  - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFBQm/e9Ej4PuQuo/M2IV0/IxGAOE83oMnBCwBn2WAaP farmkun.ram9.cc
