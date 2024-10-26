@@ -6,7 +6,7 @@ passwd:
       password_hash: $1$82024$51fV6RLyDo3oFsfkc3H7S/
       ssh_authorized_keys:
         - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFBQm/e9Ej4PuQuo/M2IV0/IxGAOE83oMnBCwBn2WAaP
-        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDGyraMnjnSZiPrRZKkRixfA9qatS8EA5AD1mhRP7bRp8d2ix98lp2NvJ43hC4aEmH/PWIfPPAMVPR0URMydS65xJHvQwl/Z6ULJuYxp6Lwlfec3KfrPOy4QmKUc+hfJC3gu5U7HW6iU7s91gPGz4IO1p/XPmi0GLfWBAbqLhcvteIykQ4zlFHdjdHy07gc3IICoSvQhOgBjhAMwtkr0tWJeXIbdk70f/bOha4tr1GM493IBrtoFkK95Na7HnAw8Jj7TAIh8LqB8FWwU8zkXl0wUHN3jz5Vg6IWdINfY7OSNwmnSjWH5FHPYS85uSrodLiAIusAe2ulFtO61wTGjqVylgspVXLklF7Kpyoyf5AtoxlVMPFN0uiZqhuJ3JaBn0e0gbQvGwPQKo2ZV+dmssIvatKg3MDDURJfT/k0gIViomyzD/Ol8RIy6uCTqHV4fa5MvgCGj3Yy7oN3vNhqdbqxsfHBh3E/x+rXnNHSn27OUhVSBLe3INgPnKghnTSRyHNu7b5jwCqzWan0DY7TkGzv/JL2onFpQWFKoziQ89h5yWcOD8OOMmWJZ5r4rp3qGBkyB8e3CNxDNRobhDVU8ZG7AKz5avLAgL43pNbnYzDrTDtP/Q9EVKrLKFK0pkaNtKmRx8Dr1oXlpODWBoOHgqnV92y0au7SVzN05/RFUcyp6Q== ram9@mikrotik
+        - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDGyraMnjnSZiPrRZKkRixfA9qatS8EA5AD1mhRP7bRp8d2ix98lp2NvJ43hC4aEmH/PWIfPPAMVPR0URMydS65xJHvQwl/Z6ULJuYxp6Lwlfec3KfrPOy4QmKUc+hfJC3gu5U7HW6iU7s91gPGz4IO1p/XPmi0GLfWBAbqLhcvteIykQ4zlFHdjdHy07gc3IICoSvQhOgBjhAMwtkr0tWJeXIbdk70f/bOha4tr1GM493IBrtoFkK95Na7HnAw8Jj7TAIh8LqB8FWwU8zkXl0wUHN3jz5Vg6IWdINfY7OSNwmnSjWH5FHPYS85uSrodLiAIusAe2ulFtO61wTGjqVylgspVXLklF7Kpyoyf5AtoxlVMPFN0uiZqhuJ3JaBn0e0gbQvGwPQKo2ZV+dmssIvatKg3MDDURJfT/k0gIViomyzD/Ol8RIy6uCTqHV4fa5MvgCGj3Yy7oN3vNhqdbqxsfHBh3E/x+rXnNHSn27OUhVSBLe3INgPnKghnTSRyHNu7b5jwCqzWan0DY7TkGzv/JL2onFpQWFKoziQ89h5yWcOD8OOMmWJZ5r4rp3qGBkyB8e3CNxDNRobhDVU8ZG7AKz5avLAgL43pNbnYzDrTDtP/Q9EVKrLKFK0pkaNtKmRx8Dr1oXlpODWBoOHgqnV92y0au7SVzN05/RFUcyp6Q==
       groups:
         - wheel
         - sudo
@@ -55,16 +55,6 @@ systemd:
         WantedBy=multi-user.target
 storage:
   files:
-    - path: /var/home/core/.ssh/id_ed25519.pub
-      overwrite: true
-      mode: 0644
-      contents:
-        local: id_ed25519.pub
-    - path: /var/home/core/.ssh/id_ed25519
-      mode: 0600
-      overwrite: true
-      contents: 
-        local: id_ed25519
     - path: /etc/rancher/post-install.bash
       overwrite: true
       contents: 
