@@ -1,0 +1,63 @@
+{
+  "ignition": {
+    "version": "3.4.0"
+  },
+  "passwd": {
+    "users": [
+      {
+        "groups": [
+          "wheel",
+          "sudo"
+        ],
+        "name": "core",
+        "passwordHash": "$1$82024$51fV6RLyDo3oFsfkc3H7S/",
+        "sshAuthorizedKeys": [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFBQm/e9Ej4PuQuo/M2IV0/IxGAOE83oMnBCwBn2WAaP",
+          "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDGyraMnjnSZiPrRZKkRixfA9qatS8EA5AD1mhRP7bRp8d2ix98lp2NvJ43hC4aEmH/PWIfPPAMVPR0URMydS65xJHvQwl/Z6ULJuYxp6Lwlfec3KfrPOy4QmKUc+hfJC3gu5U7HW6iU7s91gPGz4IO1p/XPmi0GLfWBAbqLhcvteIykQ4zlFHdjdHy07gc3IICoSvQhOgBjhAMwtkr0tWJeXIbdk70f/bOha4tr1GM493IBrtoFkK95Na7HnAw8Jj7TAIh8LqB8FWwU8zkXl0wUHN3jz5Vg6IWdINfY7OSNwmnSjWH5FHPYS85uSrodLiAIusAe2ulFtO61wTGjqVylgspVXLklF7Kpyoyf5AtoxlVMPFN0uiZqhuJ3JaBn0e0gbQvGwPQKo2ZV+dmssIvatKg3MDDURJfT/k0gIViomyzD/Ol8RIy6uCTqHV4fa5MvgCGj3Yy7oN3vNhqdbqxsfHBh3E/x+rXnNHSn27OUhVSBLe3INgPnKghnTSRyHNu7b5jwCqzWan0DY7TkGzv/JL2onFpQWFKoziQ89h5yWcOD8OOMmWJZ5r4rp3qGBkyB8e3CNxDNRobhDVU8ZG7AKz5avLAgL43pNbnYzDrTDtP/Q9EVKrLKFK0pkaNtKmRx8Dr1oXlpODWBoOHgqnV92y0au7SVzN05/RFUcyp6Q=="
+        ]
+      }
+    ]
+  },
+  "storage": {
+    "files": [
+      {
+        "overwrite": true,
+        "path": "/etc/rancher/post-install.bash",
+        "contents": {
+          "compression": "gzip",
+          "source": "data:;base64,H4sIAAAAAAAC/6SPQWsyMRCG7/kV8+UT3KW7iu2tG3PsPygExEOyHd2wcSLJqBTrfy+70lLqodDekmGeeZ/3/7+58zRHOoKzuRMpBlxOinHYxcxkdwhvMP7tqYfpOe+D52KyqGwFcibLS3O+nPfJE0M+uMypsKvFugpIW+4KubFpJ8u7RfVQXpppKfwGViAnQ46E5RKkiyxh3QB3SAKuSdh2EaTWWj/FA73AcMRFhhoyMnvaQurxvrZbJJYfUH7NjLuWAyBZF/DLzixjOvoWb1cz28RQ1xRrF2Lbj8/TFR0gTJ8shhv3/kC/db8e/0H+m8Ff7AWGjDeOxhijtYZn6imeCIZqj8XYsASllDFGKSXFxjfiPQAA//9TWQJUKwIAAA=="
+        },
+        "mode": 484
+      },
+      {
+        "overwrite": true,
+        "path": "/etc/rancher/install.sh",
+        "contents": {
+          "source": "https://get.rke2.io"
+        }
+      },
+      {
+        "overwrite": true,
+        "path": "/etc/profile.d/zzz-default-editor.sh",
+        "contents": {
+          "compression": "",
+          "source": "data:,export%20EDITOR%3Dvim%0A"
+        }
+      }
+    ]
+  },
+  "systemd": {
+    "units": [
+      {
+        "contents": "[Unit]\nDescription=Install Rancher2 Via Tar\nWants=network-online.target\nAfter=network-online.target\nBefore=zincati.service\nConditionPathExists=!/var/lib/%N.stamp\n\n[Service]\nType=oneshot\nRemainAfterExit=yes\nExecStart=/bin/sh /etc/rancher/install.sh\nExecStart=/bin/touch /var/lib/%N.stamp\nExecStart=/bin/bash /etc/rancher/post-install.bash\n\n[Install]\nWantedBy=multi-user.target\n",
+        "enabled": true,
+        "name": "install-rancher2-tar.service"
+      },
+      {
+        "contents": "[Unit]\nDescription=Layer vim with rpm-ostree\nWants=network-online.target\nAfter=install-rancher2-tar.service\n# We run before `zincati.service` to avoid conflicting rpm-ostree\n# transactions.\nBefore=zincati.service\nConditionPathExists=!/var/lib/%N.stamp\n\n[Service]\nType=oneshot\nRemainAfterExit=yes\nExecStart=/usr/bin/rpm-ostree install -y --allow-inactive vim\nExecStart=/bin/touch /var/lib/%N.stamp\nExecStart=/bin/systemctl --no-block reboot\n\n[Install]\nWantedBy=multi-user.target\n",
+        "enabled": true,
+        "name": "rpm-ostree-install-vim.service"
+      }
+    ]
+  }
+}
