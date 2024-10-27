@@ -25,7 +25,7 @@
         "path": "/etc/rancher/post-install.bash",
         "contents": {
           "compression": "gzip",
-          "source": "data:;base64,H4sIAAAAAAAC/6SPQWsyMRCG7/kV8+UT3KW7iu2tG3PsPygExEOyHd2wcSLJqBTrfy+70lLqodDekmGeeZ/3/7+58zRHOoKzuRMpBlxOinHYxcxkdwhvMP7tqYfpOe+D52KyqGwFcibLS3O+nPfJE0M+uMypsKvFugpIW+4KubFpJ8u7RfVQXpppKfwGViAnQ46E5RKkiyxh3QB3SAKuSdh2EaTWWj/FA73AcMRFhhoyMnvaQurxvrZbJJYfUH7NjLuWAyBZF/DLzixjOvoWb1cz28RQ1xRrF2Lbj8/TFR0gTJ8shhv3/kC/db8e/0H+m8Ff7AWGjDeOxhijtYZn6imeCIZqj8XYsASllDFGKSXFxjfiPQAA//9TWQJUKwIAAA=="
+          "source": "data:;base64,H4sIAAAAAAAC/5yPzWrrMBCF936KubqB2NROSLurFS37BgVByEJyJ7GwMgrSJKGkfvdih0KpC4XspOH8fOf/v6V1tEQ6gzWpzWLwuJ7l47ENickcED5g/JtLB/NrOnrH+WxVmhLEQhR9fe2vx+iIIZ1s4pibzWpbeqQ9t7nYmXgQxcOqfCr6el5kbgcbELOhR8B6DcIGFrCtgVukDG5N2LQBhFJKvYQTvcEQYgNDBQmZHe0hdvhYmT0Siy9Tek+Mh4Y9IBnr8ZtmkTCeXYNTaWITGaqKQmV9aLrxefnNin6C3p3oXvQhFeMf7DfRffA/vOgTThC11lopBa/UUbgQDMue83FgAVJKrbWUUmQ7V2efAQAA//9mJ8mxKQIAAA=="
         },
         "mode": 484
       },
@@ -49,9 +49,14 @@
   "systemd": {
     "units": [
       {
-        "contents": "[Unit]\nDescription=Install Rancher2 Via Tar\nWants=network-online.target\nAfter=network-online.target\nBefore=zincati.service\nConditionPathExists=!/var/lib/%N.stamp\n\n[Service]\nType=oneshot\nRemainAfterExit=yes\nExecStart=/bin/sh /etc/rancher/install.sh\nExecStart=/bin/touch /var/lib/%N.stamp\nExecStart=/bin/bash /etc/rancher/post-install.bash\n\n[Install]\nWantedBy=multi-user.target\n",
+        "contents": "[Unit]\nDescription=Install Rancher2 Via Tar\nWants=network-online.target\nAfter=network-online.target\nBefore=zincati.service\nConditionPathExists=!/var/lib/%N.stamp\n\n[Service]\nType=oneshot\nRemainAfterExit=yes\nExecStart=/bin/sh /etc/rancher/install.sh\nExecStart=/bin/touch /var/lib/%N.stamp\n\n[Install]\nWantedBy=multi-user.target\n",
         "enabled": true,
         "name": "install-rancher2-tar.service"
+      },
+      {
+        "contents": "[Unit]\nDescription=Run Rancher Kubernetes according to machine role\nWants=network-online.target\nAfter=install-rancher2-tar.service\nBefore=zincati.service\n[Service]\nExecStart=/bin/bash /etc/rancher/post-install.bash\n[Install]\nWantedBy=multi-user.target\n",
+        "enabled": true,
+        "name": "farm.ram9.cc.service"
       },
       {
         "contents": "[Unit]\nDescription=Layer vim with rpm-ostree\nWants=network-online.target\nAfter=install-rancher2-tar.service\n# We run before `zincati.service` to avoid conflicting rpm-ostree\n# transactions.\nBefore=zincati.service\nConditionPathExists=!/var/lib/%N.stamp\n\n[Service]\nType=oneshot\nRemainAfterExit=yes\nExecStart=/usr/bin/rpm-ostree install -y --allow-inactive vim\nExecStart=/bin/touch /var/lib/%N.stamp\nExecStart=/bin/systemctl --no-block reboot\n\n[Install]\nWantedBy=multi-user.target\n",

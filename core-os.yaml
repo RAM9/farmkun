@@ -27,11 +27,22 @@ systemd:
         RemainAfterExit=yes
         ExecStart=/bin/sh /etc/rancher/install.sh
         ExecStart=/bin/touch /var/lib/%N.stamp
-        ExecStart=/bin/bash /etc/rancher/post-install.bash
 
         [Install]
         WantedBy=multi-user.target
     # Installing vim as a layered package with rpm-ostree
+    - name: farm.ram9.cc.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Run Rancher Kubernetes according to machine role
+        Wants=network-online.target
+        After=install-rancher2-tar.service
+        Before=zincati.service
+        [Service]
+        ExecStart=/bin/bash /etc/rancher/post-install.bash
+        [Install]
+        WantedBy=multi-user.target
     - name: rpm-ostree-install-vim.service
       enabled: true
       contents: |
@@ -64,12 +75,11 @@ storage:
           if [ "$role" == "bot" ]; then
             /bin/echo ">>>>Found farmbot - setting rke2-agent"
             /bin/systemctl enable rke2-agent.service
-            /bin/systemctl start --no-block --now rke2-server.service
+            /bin/systemctl start --no-block --now rke2-agent.service
           elif [ "$role" == "kun" ]; then
             /bin/echo ">>>>Found farmbot - setting rke2-server"
             /bin/systemctl enable rke2-server.service
             /bin/systemctl start --no-block --now rke2-server.service
-
           else
             /bin/echo ">>>XXXX>>> Unknown role:($role) <<<XXX<<<"
           fi;
