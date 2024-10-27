@@ -25,7 +25,7 @@
         "path": "/etc/rancher/post-install.bash",
         "contents": {
           "compression": "gzip",
-          "source": "data:;base64,H4sIAAAAAAAC/5yPzWrrMBCF936KubqB2NROSLurFS37BgVByEJyJ7GwMgrSJKGkfvdih0KpC4XspOH8fOf/v6V1tEQ6gzWpzWLwuJ7l47ENickcED5g/JtLB/NrOnrH+WxVmhLEQhR9fe2vx+iIIZ1s4pibzWpbeqQ9t7nYmXgQxcOqfCr6el5kbgcbELOhR8B6DcIGFrCtgVukDG5N2LQBhFJKvYQTvcEQYgNDBQmZHe0hdvhYmT0Siy9Tek+Mh4Y9IBnr8ZtmkTCeXYNTaWITGaqKQmV9aLrxefnNin6C3p3oXvQhFeMf7DfRffA/vOgTThC11lopBa/UUbgQDMue83FgAVJKrbWUUmQ7V2efAQAA//9mJ8mxKQIAAA=="
+          "source": "data:;base64,H4sIAAAAAAAC/5xSX4viMBB/76eYi8IqZxv14NbT2sf7BgeFZR/SONrQdFKSqSKe3/1ouwfuKizsS8hkfn8ho2+yMCSRjlCoUEYjQBUQ3B7agFG/swRxAHlUXlpTSK9Il+ilr3DZ76u2QM0WZBu8tE4re/v8SLGudsZD3ID0zrFMOug7L2T93qc7krOq7S1Fakd7c4iiERyQYZhar9g4AkPQWKXvHD9KwwDQrbdQMjdrKRfPy2TxnMyT5Xq1Wv16sxnsY/cg3Q3gTa2s3Q5+zuefgIfg4RwYa/CodudoFHlncTue9EKlC0yqRvgL/axOFTxdQmMNT8aLmZqBSMT0urlcL403xBDaIrCfqJfF68wiHbiciL3ytZh+X8x+TK+bp2lk9vACYtz5CNhuQRSOBbxugEukCAYn1KUDkWVZ9tu1tINOpHAMMQRkNnSArk2sDkgs/pOGJt1nQFKFxRtMEtAfjcZ7aGDlGeKYXFxYp6v+enpERXsXvWrpq9E7VfSfZB9AXwv/gYs24F3EPM/zLMvgD1XkTgRds/WkLziFNE3zPE/TVER7s4n+BQAA//8YvmDvrAMAAA=="
         },
         "mode": 484
       },
