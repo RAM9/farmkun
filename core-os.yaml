@@ -71,6 +71,18 @@ storage:
       contents: 
         inline: |
           #!/bin/env bash
+          # ease of use
+          /bin/ln -s /var/lib/rancher/rke2/bin/kubectl /usr/local/bin/kubectl
+          # ease of use
+          /bin/mkdir -p /root/.kube
+          /bin/ln -s /etc/rancher/rke2/rke2.yaml /root/.kube/config
+
+          # get configuration in place
+          /bin/mkdir -p /etc/rancher/rke2 
+          /bin/curl http://172.17.0.2:8889/config.yaml -o /etc/rancher/rke2/config.yaml
+          /bin/chmod 600 /etc/rancher/rke2/config.yaml
+          # get system ready
+          #
           role=$(/bin/hostname | /bin/awk '{split($1,a, ".")};{}{print substr(a[1],length("farm")+1,3)};')
           if [ "$role" == "bot" ]; then
             /bin/echo ">>>>Found farmbot - setting rke2-agent"
