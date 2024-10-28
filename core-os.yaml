@@ -68,7 +68,7 @@ storage:
   files:
     - path: /etc/rancher/post-install.bash
       overwrite: true
-      contents: 
+      contents:
         inline: |
           #!/bin/env bash
           # ease of use
@@ -78,17 +78,40 @@ storage:
           /bin/ln -s /etc/rancher/rke2/rke2.yaml /root/.kube/config
 
           # get configuration in place
-          /bin/mkdir -p /etc/rancher/rke2 
-          /bin/curl http://172.17.0.2:8889/config.yaml -o /etc/rancher/rke2/config.yaml
-          /bin/chmod 600 /etc/rancher/rke2/config.yaml
+          /bin/mkdir -p /etc/rancher/rke2
+
           # get system ready
-          #
           role=$(/bin/hostname | /bin/awk '{split($1,a, ".")};{}{print substr(a[1],length("farm")+1,3)};')
           if [ "$role" == "bot" ]; then
-            /bin/echo ">>>>Found farmbot - setting rke2-agent"
+            /bin/curl -fk https://farmkun.ram9.cc:9345/cacerts
+            if [ $? == 0 ]; then
+              # n+1 machines
+              /bin/echo ">>>>Found Running Farmkun <<<<"
+            else
+              # base condition - first machine
+              /bin/echo ">>>> XXX Warning XXX Agent will not be able to find controller <<<<"
+            fi
+            /bin/echo ">>>> Fetching Cluster Configuration <<<<"
+            /bin/curl http://172.17.0.2:8889/agent_config.yaml -o /etc/rancher/rke2/config.yaml
+          /bin/chmod 600 /etc/rancher/rke2/config.yaml
+            /bin/echo ">>>> Found farmbot - setting rke2-agent"
             /bin/systemctl enable rke2-agent.service
             /bin/systemctl start --no-block --now rke2-agent.service
           elif [ "$role" == "kun" ]; then
+            # if cluster is already running it will respond with cacerts
+            # and this isn't the first machine
+            /bin/curl -fk https://farmkun.ram9.cc:9345/cacerts
+            if [ $? == 0 ]; then
+              # n+1 machines
+              /bin/echo ">>>> Found Running Farmkun <<<<"
+              /bin/curl http://172.17.0.2:8889/config.yaml -o /etc/rancher/rke2/config.yaml
+              /bin/chmod 600 /etc/rancher/rke2/config.yaml
+            else
+              # base condition - first machine
+              /bin/echo ">>>> No Running Farmkun found : This one will become first node  <<<<"
+              /bin/curl http://172.17.0.2:8889/first_config.yaml -o /etc/rancher/rke2/config.yaml
+              /bin/chmod 600 /etc/rancher/rke2/config.yaml
+            fi
             /bin/echo ">>>>Found farmbot - setting rke2-server"
             /bin/systemctl enable rke2-server.service
             /bin/systemctl start --no-block --now rke2-server.service
