@@ -25,7 +25,7 @@
         "path": "/etc/rancher/post-install.bash",
         "contents": {
           "compression": "gzip",
-          "source": "data:;base64,H4sIAAAAAAAC/5xSX4viMBB/76eYi8IqZxv14NbT2sf7BgeFZR/SONrQdFKSqSKe3/1ouwfuKizsS8hkfn8ho2+yMCSRjlCoUEYjQBUQ3B7agFG/swRxAHlUXlpTSK9Il+ilr3DZ76u2QM0WZBu8tE4re/v8SLGudsZD3ID0zrFMOug7L2T93qc7krOq7S1Fakd7c4iiERyQYZhar9g4AkPQWKXvHD9KwwDQrbdQMjdrKRfPy2TxnMyT5Xq1Wv16sxnsY/cg3Q3gTa2s3Q5+zuefgIfg4RwYa/CodudoFHlncTue9EKlC0yqRvgL/axOFTxdQmMNT8aLmZqBSMT0urlcL403xBDaIrCfqJfF68wiHbiciL3ytZh+X8x+TK+bp2lk9vACYtz5CNhuQRSOBbxugEukCAYn1KUDkWVZ9tu1tINOpHAMMQRkNnSArk2sDkgs/pOGJt1nQFKFxRtMEtAfjcZ7aGDlGeKYXFxYp6v+enpERXsXvWrpq9E7VfSfZB9AXwv/gYs24F3EPM/zLMvgD1XkTgRds/WkLziFNE3zPE/TVER7s4n+BQAA//8YvmDvrAMAAA=="
+          "source": "data:;base64,H4sIAAAAAAAC/7xTW2/bNhR+16/4JgeIjUZmnG5r4lyGoUAe9zBsmICiKCjqyCJEHRokFSPI8t8HUk7j1EYvG9YXQRLP+c7hd5n8ICrNgvgOlfRtNgFJT7ANBk9ZOjOMwkPcSSeMroSTrFpywnV0ls67oSIVDMTgnTBWSbP7+xBi39XaoVhDOGuDmMfSF7MoqJdz4mN+L3uz2yKU5UavsmyCFQWMX4OTQVuGZqyNVHsTP4V+6vb3PlAPR7K+z5w1dH00Ta2t9YFlT/gb6VtuOhw/+LXRYXq0OJEnyOf57PHy4fFh7TQH+KHywU3lu8X7E0O8Cu00b6Tr89mrxcnr2ePl8SzTDd4hP4pzclxfI69syPH+EqElzjBOUoMzKJoObQhrvxQionQDz53sL+ZKLS9e//iTUFKRCz4DEujRLxHvdAcLmIBfLdBL1Womn36NqqvWIr+5ubm5tQPX+H1g1rzC7TgHV1dXV3kGkPG0BaqilspyrRPLBRrtfHjCPgSNsizxl3QJOb7/uiIO2GhjwDagIsjKEIJFo7mO4MFZY8h9nN/obB/2lkKcucJbM/hADm9f6P/U+8xkZHEpxOLN2XzxZn46P1uen59fCBnX+TCaZ7RYYQ84cKdgtJRqe1vj59PTLxQf2DyRHcWsbEABTyHEi8TWIq3zcfHRlTFdxIml55q5J3enFe2X+iBdQFGwLSpjVZdeN4dayewZsRt414iT6Cq1ZVh7SJMSAre1it4q6civLdfY6NDi2ZITSK4RWu2hPR+HCLtnme9tdnze7V/hmW9yyzPiVzvmvwXuN7t3tybdeIk/ohKWaRStImX7Jz3Y1oRvISG1ffi/qTiU/c8GKHqb3BcSNBb9uwh90rvV6uWKZVmWUYo/uWO7YcR8LacpZrPIcVmWiehGX2b/BAAA///7tktdgwcAAA=="
         },
         "mode": 484
       },
