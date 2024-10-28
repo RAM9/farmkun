@@ -105,7 +105,9 @@ storage:
           /bin/mkdir -p /root/.kube
           /bin/ln -s /etc/rancher/rke2/rke2.yaml /root/.kube/config
 
-          # get configuration in place
+          # clear prior configuration
+          rm -rf /etc/rancher/node
+          rm -rf /etc/rancher/rke2
           /bin/mkdir -p /etc/rancher/rke2
 
           # get system ready
@@ -120,11 +122,12 @@ storage:
               /bin/echo ">>>> XXX Warning XXX Agent will not be able to find controller <<<<"
             fi
             /bin/echo ">>>> Fetching Cluster Configuration <<<<"
+            # INSTALL CONFIG
             /bin/curl http://172.17.0.2:8889/agent_config.yaml -o /etc/rancher/rke2/config.yaml
-          /bin/chmod 600 /etc/rancher/rke2/config.yaml
+            /bin/chmod 600 /etc/rancher/rke2/config.yaml
             /bin/echo ">>>> Found farmbot - setting rke2-agent"
             /bin/systemctl enable rke2-agent.service
-            /bin/systemctl start --no-block --now rke2-agent.service
+            /bin/systemctl start --now rke2-agent.service
           elif [ "$role" == "kun" ]; then
             # if cluster is already running it will respond with cacerts
             # and this isn't the first machine
@@ -133,16 +136,18 @@ storage:
               # n+1 machines
               /bin/echo ">>>> Found Running Farmkun <<<<"
               /bin/curl http://172.17.0.2:8889/config.yaml -o /etc/rancher/rke2/config.yaml
+              # INSTALL CONFIG
               /bin/chmod 600 /etc/rancher/rke2/config.yaml
             else
               # base condition - first machine
               /bin/echo ">>>> No Running Farmkun found : This one will become first node  <<<<"
               /bin/curl http://172.17.0.2:8889/first_config.yaml -o /etc/rancher/rke2/config.yaml
+              # INSTALL CONFIG
               /bin/chmod 600 /etc/rancher/rke2/config.yaml
             fi
             /bin/echo ">>>>Found farmbot - setting rke2-server"
             /bin/systemctl enable rke2-server.service
-            /bin/systemctl start --no-block --now rke2-server.service
+            /bin/systemctl start --now rke2-server.service
           else
             /bin/echo ">>>XXXX>>> Unknown role:($role) <<<XXX<<<"
           fi;
