@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: farm-hello-world
+  namespace: apps
+  labels:
+    type: static-index
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      type: static-index
+  template:
+    metadata:
+      labels:
+        type: static-index
+    spec:
+      containers:
+        - name: static-index
+          image: c8n.io/robotarmy/hello-world:0.2
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          resources:
+            requests:
+              memory: "4Mi"
+              cpu: "200m"
+            limits:
+              memory: "8Mi"
+              cpu: "300m"
+      
