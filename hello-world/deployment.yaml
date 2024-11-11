@@ -15,6 +15,8 @@ spec:
       labels:
         type: static-index
     spec:
+      imagePullSecrets:
+        - name: c8n-robotarmy   
       containers:
         - name: static-index
           image: c8n.io/robotarmy/hello-world:0.2
