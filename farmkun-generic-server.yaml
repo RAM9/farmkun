@@ -87,30 +87,16 @@ storage:
       # for referring to it in a device-agnostic way in other parts of the
       # configuration.
       label: var
-  - # longhorn for farmkun1
-    device: /dev/disk/by-id/wwn-0x500a0751e8ac2f0e
-    wipe_table: true # change to false
-    #wipe_table: false
-    partitions:
-    - size_mib: 0
-      start_mib: 0
-      label: longhorn
-  - # longhorn for farmkun2
-    device: /dev/disk/by-id/wwn-0x500a0751e8ab06f0
-    wipe_table: true # change to false
-    #wipe_table: false
-    partitions:
-    - size_mib: 0
-      start_mib: 0
-      label: longhorn
-  - # longhorn for farmkun3
-    device: /dev/disk/by-id/wwn-0x500a0751e8ad05e8
-    wipe_table: true # change to false
-    #wipe_table: false
-    partitions:
-    - size_mib: 0
-      start_mib: 0
-      label: longhorn
+  #- # longhorn for farmkun1
+  #  device: /dev/disk/by-id/wwn-0x500a0751e8ac2f0e
+  #  wipe_table: true # change to false
+  #  #wipe_table: false
+  #  partitions:
+  #  - label: longhorn 
+  #    wipe_partition_entry: true
+  #    start_mib: 0
+  #    size_mib: 0
+  #    resize: true
   filesystems:
     - path: /var
       # /var is writable
@@ -122,14 +108,14 @@ storage:
       # Ask Butane to generate a mount unit for us so that this filesystem
       # gets mounted in the real root.
       with_mount_unit: true
-    - path: /var/lib/longhorn
-      device: /dev/disk/by-partlabel/longhorn
-      wipe_filesystem: true # change to false
-      #wipe_filesystem: false
-      format: ext4
-      # Ask Butane to generate a mount unit for us so that this filesystem
-      # gets mounted in the real root.
-      with_mount_unit: true
+    #- path: /var/lib/longhorn
+    #  device: /dev/disk/by-partlabel/longhorn
+    #  wipe_filesystem: true # change to false
+    #  #wipe_filesystem: false
+    #  format: ext4
+    #  # Ask Butane to generate a mount unit for us so that this filesystem
+    #  # gets mounted in the real root.
+    #  with_mount_unit: true
   files:
     - path: /etc/rancher/post-install.bash
       overwrite: true
@@ -147,48 +133,25 @@ storage:
           rm -rf /etc/rancher/rke2
           /bin/mkdir -p /etc/rancher/rke2
 
-          # get system ready
-          role=$(/bin/hostname | /bin/awk '{split($1,a, ".")};{}{print substr(a[1],length("farm")+1,3)};')
-          if [ "$role" == "bot" ]; then
-            /bin/curl -fk https://farmkun.ram9.cc:9345/cacerts
-            if [ $? == 0 ]; then
-              # n+1 machines
-              /bin/echo ">>>>Found Running Farmkun <<<<"
-            else
-              # base condition - first machine
-              /bin/echo ">>>> XXX Warning XXX Agent will not be able to find controller <<<<"
-            fi
-            /bin/echo ">>>> Fetching Cluster Configuration <<<<"
+          # if cluster is already running it will respond with cacerts
+          # and this isn't the first machine
+          /bin/curl -fk https://farmkun.ram9.cc:9345/cacerts
+          if [ $? == 0 ]; then
+            # n+1 machines
+            /bin/echo ">>>> Found Running Farmkun <<<<"
+            /bin/curl -k https://config.private/config.yaml -o /etc/rancher/rke2/config.yaml
             # INSTALL CONFIG
-            /bin/curl -k https://config.private/agent_config.yaml -o /etc/rancher/rke2/config.yaml
             /bin/chmod 600 /etc/rancher/rke2/config.yaml
-            /bin/echo ">>>> Found farmbot - setting rke2-agent"
-            /bin/systemctl enable rke2-agent.service
-            # use noblock to allow this service to exit clean let rke2-agent mind it's own business
-            /bin/systemctl start --no-block --now rke2-agent.service
-          elif [ "$role" == "kun" ]; then
-            # if cluster is already running it will respond with cacerts
-            # and this isn't the first machine
-            /bin/curl -fk https://farmkun.ram9.cc:9345/cacerts
-            if [ $? == 0 ]; then
-              # n+1 machines
-              /bin/echo ">>>> Found Running Farmkun <<<<"
-              /bin/curl -k https://config.private/config.yaml -o /etc/rancher/rke2/config.yaml
-              # INSTALL CONFIG
-              /bin/chmod 600 /etc/rancher/rke2/config.yaml
-            else
-              # base condition - first machine
-              /bin/echo ">>>> No Running Farmkun found : This one will become first node  <<<<"
-              /bin/curl -k https://config.private/first_config.yaml -o /etc/rancher/rke2/config.yaml
-              # INSTALL CONFIG
-              /bin/chmod 600 /etc/rancher/rke2/config.yaml
-            fi
-            /bin/echo ">>>>Found farmbot - setting rke2-server"
-            /bin/systemctl enable rke2-server.service
-            /bin/systemctl start --no-block --now rke2-server.service
           else
-            /bin/echo ">>>XXXX>>> Unknown role:($role) <<<XXX<<<"
-          fi;
+            # base condition - first machine
+            /bin/echo ">>>> No Running Farmkun found : This one will become first node  <<<<"
+            /bin/curl -k https://config.private/first_config.yaml -o /etc/rancher/rke2/config.yaml
+            # INSTALL CONFIG
+            /bin/chmod 600 /etc/rancher/rke2/config.yaml
+          fi
+          /bin/echo ">>>>I am farmbot - setting rke2-server"
+          /bin/systemctl enable rke2-server.service
+          /bin/systemctl start --no-block --now rke2-server.service
       mode: 0744
 
     - path: /etc/rancher/install.sh

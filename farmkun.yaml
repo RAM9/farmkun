@@ -27,11 +27,12 @@
             "label": "root",
             "number": 4,
             "resize": true,
-            "sizeMiB": 8192
+            "sizeMiB": 16384
           },
           {
             "label": "var",
-            "sizeMiB": 0
+            "sizeMiB": 0,
+            "wipePartitionEntry": true
           }
         ],
         "wipeTable": false
@@ -43,7 +44,7 @@
         "path": "/etc/rancher/post-install.bash",
         "contents": {
           "compression": "gzip",
-          "source": "data:;base64,H4sIAAAAAAAC/8SUb2sjNxDG3++neLoOxOay3qTXFi7/yhFIOThSaK904TgOrXbWK6yVzGg2JqT57kWyk9hnc71QaN8YrzTzjDTPbzT6rqyNK8ndolahy0YgFQi+xRAoS3vWoQgobxWX1tQlK6c74pLn9H3anw81abEoh8Cl9VrZzeV9iv28MYxigZK9l3IaQ7dqkejtOvFneqd6u5lSau9aM8uyEbQlxViw8YzV6sBKjHcZ9yi43ZZ0vqG9G7HMl0fc2c9GmJEg3AWhHkyqucvYW7o4GKfUzgdxqif8hfStlnMc3oeFNTI+ODlSR8in+eTh7P7hfsHGCcJQB+Gx+njy6ciSm0k3zlvFfT55dXL0evJwdjjJTIuPyA9inRwXF8hrLzk+nUE6chlWlfTAFkU7RyeyCKdlGVXmg5uy6t9MtT598/qHH0utNLGEDEiiBz9HveMNLWAE9+oEvdKdcRTS0goT3Xnkl5eXl9d+cA1+G5wzbobrVR2cn5+f5xlANtBaqI7ma+8aE+1AgdZwkEftfdKoqgp/Kk7K8f/bGTnB0lgL5wU1QdWWIB6tcU0UF/bWEj/Vb022K3tNEmvOcGWHIMS42gTlKXeEdze/f3j7/j2ufr25fvfLdnOfe7vCbLpgc6uEShUP+Xm9mEgt/B6QNwKehLveN/jp+PjbwjdvlEyIJtdeUCCQSLxgTC3SgfLHrBWtcUzJpe49x0wD8a3RtBsaRLGgKJxf7osnu0PlfHCbVI4iYnrdbhOgbBoX8Jobs7aVKSy8a7A00uGZzxGUayCdCTDBHUqU3eHnvyYfX0f/22h5ISd7qXwxPv9uKm/8zp3b1IlTfIgOeUcrM2vSvn/0KT61eGFzUubn/6VF+x6Or05ZnAXifxizVdAL5uyLhLVx2+eqqqqKvvzh5s4vHeIQno7TLE5iw6uqSl1vzVn2dwAAAP///ntA+uYHAAA="
+          "source": "data:;base64,H4sIAAAAAAAC/7xTS4vbMBC++1d8jQs9FFnpEzbNppRCSmBJod1bKUWWx2thWQojOSH/vsjetHlB6WUvttHMfPM95PyZLI2T5LYoVWiyHKQCwdfoA2VDzTqIALlVLK0pJSunG2LJLb0e6m1fko4Wsg8srdfKHh9fQ+zayjDEBpK9j7JIrSe7KOrTPelR7FVnj0ek9q42D1mWQ1tSjA0bzxhPe1bReJdxB8H1KaTzFV0tpDXnFC/qWQ5TQ9s+RGKYAGWZVLUH984Z9wATsTPWgilsvKuwM7GBVpo4hiyHchViYwJMcC8iYkOoDYeITunGuEcndM8Wom7RxLgJMylrxV3bu4JVd1NoPbt58/adPKCaGj/w/CNubzHFzw8J1GVADvfy1QE3ZMAYtm48JovFYoGl712Fb4/El+MKzOfz+eTQPRL5y2O0t9iw2ap4yGDMRvgr0R01DIxW6+/3n+7u8Pnrern68mdL0/kK76fTfyCQDTTAlOlSae8qk2KGOPPwUuraX+isB/Uz3Kc0vKMxtpK07w6ZpKuC/zJkmPv1xLbUJjvTu4LqkO5M6SMEAsWYpKdJEYi3xJNxJOxDpC79wORUaem4pUgvo+m8M0TFEUI4L0rrdTt87q5O/g4AAP//sp4dXWEEAAA="
         },
         "mode": 484
       },
@@ -68,7 +69,7 @@
         "device": "/dev/disk/by-partlabel/var",
         "format": "ext4",
         "path": "/var",
-        "wipeFilesystem": false
+        "wipeFilesystem": true
       }
     ]
   },
@@ -90,9 +91,9 @@
         "name": "farm.ram9.cc.service"
       },
       {
-        "contents": "[Unit]\nDescription=Layer vim with rpm-ostree\nWants=network-online.target\nAfter=install-rancher2-tar.service\n# We run before `zincati.service` to avoid conflicting rpm-ostree\n# transactions.\nBefore=zincati.service\nConditionPathExists=!/var/lib/%N.stamp\n\n[Service]\nType=oneshot\nRemainAfterExit=yes\nExecStart=/usr/bin/rpm-ostree install -y --allow-inactive vim\nExecStart=/bin/touch /var/lib/%N.stamp\nExecStart=/bin/systemctl --no-block reboot\n\n[Install]\nWantedBy=multi-user.target\n",
+        "contents": "[Unit]\nDescription=Layer vim with rpm-ostree\nWants=network-online.target\nAfter=install-rancher2-tar.service\n# We run before `zincati.service` to avoid conflicting rpm-ostree\n# transactions.\nBefore=zincati.service\nConditionPathExists=!/var/lib/%N.stamp\n\n[Service]\nType=oneshot\nRemainAfterExit=yes\nExecStart=/usr/bin/rpm-ostree install -y --allow-inactive vim tmux emacs zsh NetworkManager-wifi  iwlwifi-dvm-firmware iwlwifi-mvm-firmware\nExecStart=/bin/touch /var/lib/%N.stamp\nExecStart=/bin/systemctl --no-block reboot\n\n[Install]\nWantedBy=multi-user.target\n",
         "enabled": true,
-        "name": "rpm-ostree-install-vim.service"
+        "name": "rpm-ostree-install-packages.service"
       }
     ]
   }
