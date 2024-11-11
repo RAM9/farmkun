@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  creationTimestamp: "2024-11-11T03:44:27Z"
+  generation: 1
+  name: farm-hello-world-ingress
+  namespace: apps
+  resourceVersion: "349657"
+  uid: 24dcddea-6fdf-4518-b47d-5c96c615dfb1
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: farm.ram9.cc
+    http:
+      paths:
+      - backend:
+          service:
+            name: farm-hello-world-service
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+status:
+  loadBalancer:
+    ingress:
+    - ip: 192.168.88.221
+    - ip: 192.168.88.222
+    - ip: 192.168.88.223
+    - ip: 192.168.88.93
+    - ip: 192.168.88.94
+    - ip: 192.168.88.95
+    - ip: 192.168.88.96
