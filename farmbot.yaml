@@ -124,12 +124,15 @@ storage:
           /bin/systemctl enable rke2-agent.service
           # use noblock to allow this service to exit clean let rke2-agent mind it's own business
           /bin/systemctl start --no-block --now rke2-agent.service
-      mode: 0744
-
+      mode: 074
+    - path: /etc/selinux/config
+      overwrite: true
+      contents:
+        local: selinux-config
     - path: /etc/rancher/install.sh
       overwrite: true
       contents:
-        local: install.sh
+        local: rke2-install.sh
     # Set vim as default editor
     # We use `zz-` as prefix to make sure this is processed last in order to
     # override any previously set defaults.
