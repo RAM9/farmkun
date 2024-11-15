@@ -1,0 +1,2 @@
+printf "---secret---here---" | podman secret create robotarmy-password -
+
