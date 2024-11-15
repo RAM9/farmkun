@@ -25,7 +25,7 @@ systemd:
         [Service]
         Type=oneshot
         RemainAfterExit=yes
-        ExecStart=/bin/sh /etc/rancher/install.sh
+        ExecStart=/bin/bash -c ' INSTALL_RKE2_METHOD=tar sh /etc/rancher/install.sh'
         ExecStart=/bin/touch /var/lib/%N.stamp
 
         [Install]
@@ -87,16 +87,6 @@ storage:
       # for referring to it in a device-agnostic way in other parts of the
       # configuration.
       label: var
-  #- # longhorn for farmkun1
-  #  device: /dev/disk/by-id/wwn-0x500a0751e8ac2f0e
-  #  wipe_table: true # change to false
-  #  #wipe_table: false
-  #  partitions:
-  #  - label: longhorn 
-  #    wipe_partition_entry: true
-  #    start_mib: 0
-  #    size_mib: 0
-  #    resize: true
   filesystems:
     - path: /var
       # /var is writable
@@ -108,14 +98,6 @@ storage:
       # Ask Butane to generate a mount unit for us so that this filesystem
       # gets mounted in the real root.
       with_mount_unit: true
-    #- path: /var/lib/longhorn
-    #  device: /dev/disk/by-partlabel/longhorn
-    #  wipe_filesystem: true # change to false
-    #  #wipe_filesystem: false
-    #  format: ext4
-    #  # Ask Butane to generate a mount unit for us so that this filesystem
-    #  # gets mounted in the real root.
-    #  with_mount_unit: true
   files:
     - path: /etc/rancher/post-install.bash
       overwrite: true
@@ -157,7 +139,10 @@ storage:
     - path: /etc/rancher/install.sh
       overwrite: true
       contents:
-        source: https://get.rke2.io
+      #  source: https://get.rke2.io
+        local: install.sh
+
+
     # Set vim as default editor
     # We use `zz-` as prefix to make sure this is processed last in order to
     # override any previously set defaults.

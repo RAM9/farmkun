@@ -25,7 +25,7 @@ systemd:
         [Service]
         Type=oneshot
         RemainAfterExit=yes
-        ExecStart=/bin/sh /etc/rancher/install.sh
+        ExecStart=/bin/bash -c ' INSTALL_RKE2_METHOD=tar sh /etc/rancher/install.sh '
         ExecStart=/bin/touch /var/lib/%N.stamp
 
         [Install]
@@ -129,7 +129,7 @@ storage:
     - path: /etc/rancher/install.sh
       overwrite: true
       contents:
-        source: https://get.rke2.io
+        local: install.sh
     # Set vim as default editor
     # We use `zz-` as prefix to make sure this is processed last in order to
     # override any previously set defaults.
