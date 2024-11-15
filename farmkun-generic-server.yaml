@@ -136,11 +136,15 @@ storage:
           /bin/systemctl start --no-block --now rke2-server.service
       mode: 0744
 
+    - path: /etc/selinux/config
+      overwrite: true
+      contents:
+        local: selinux-config
+
     - path: /etc/rancher/install.sh
       overwrite: true
       contents:
-      #  source: https://get.rke2.io
-        local: install.sh
+        local: rke2-install.sh
 
 
     # Set vim as default editor
