@@ -26,21 +26,22 @@ systemd:
         Type=oneshot
         RemainAfterExit=yes
         ExecStart=/bin/bash -c ' INSTALL_RKE2_METHOD=tar sh /etc/rancher/install.sh '
+        ExecStart=/bin/bash /etc/rancher/post-install.bash
         ExecStart=/bin/touch /var/lib/%N.stamp
 
         [Install]
         WantedBy=multi-user.target
     # Installing vim as a layered package with rpm-ostree
-    - name: farm.ram9.cc.service
+    - name: farmbot.ram9.cc.service
       enabled: true
       contents: |
         [Unit]
-        Description=Run Rancher Kubernetes according to machine role
+        Description=Run Rancher Kubernetes Agent
         Wants=network-online.target
         After=install-rancher2-tar.service
         Before=zincati.service
         [Service]
-        ExecStart=/bin/bash /etc/rancher/post-install.bash
+        ExecStart=/bin/systemctl start --no-block --now rke2-agent.service
         [Install]
         WantedBy=multi-user.target
     - name: rpm-ostree-install-packages.service
@@ -58,7 +59,7 @@ systemd:
         [Service]
         Type=oneshot
         RemainAfterExit=yes
-        ExecStart=/usr/bin/rpm-ostree install -y --allow-inactive vim tmux emacs zsh NetworkManager-wifi  iwlwifi-dvm-firmware iwlwifi-mvm-firmware
+        ExecStart=/usr/bin/rpm-ostree install -y --allow-inactive vim tmux emacs zsh podman helm 
         ExecStart=/bin/touch /var/lib/%N.stamp
         ExecStart=/bin/systemctl --no-block reboot
 
@@ -104,27 +105,35 @@ storage:
       contents:
         inline: |
           #!/bin/env bash
-          # ease of use
-          /bin/ln -s /var/lib/rancher/rke2/bin/kubectl /usr/local/bin/kubectl
-          # ease of use
-          /bin/mkdir -p /root/.kube
-          /bin/ln -s /etc/rancher/rke2/rke2.yaml /root/.kube/config
           # clear prior configuration
           rm -rf /etc/rancher/node
           rm -rf /etc/rancher/rke2
           /bin/mkdir -p /etc/rancher/rke2
           /bin/mkdir -p /etc/rancher/node
-          # generate a node password
+          # generate a node password	
           /bin/pwmake 256 > /etc/rancher/node/password
           /bin/echo ">>>> Fetching Cluster Configuration <<<<"
           # INSTALL CONFIG
           /bin/curl -k https://config.private/agent_config.yaml -o /etc/rancher/rke2/config.yaml
           /bin/chmod 600 /etc/rancher/rke2/config.yaml
+          # ease of use
+          /bin/ln -s /var/lib/rancher/rke2/bin/kubectl /usr/local/bin/kubectl
+          /bin/mkdir -p /root/.kube
+          /bin/ln -s /etc/rancher/rke2/rke2.yaml /root/.kube/config
+          # enable
           /bin/echo ">>>> I am a farmbot - establishing rke2-agent"
           /bin/systemctl enable rke2-agent.service
-          # use noblock to allow this service to exit clean let rke2-agent mind it's own business
-          /bin/systemctl start --no-block --now rke2-agent.service
       mode: 074
+    - path: /etc/modules-load.d/ip6_tables.conf
+      overwrite: true
+      contents:
+        inline: |
+          ip6_tables
+    - path: /etc/modules-load.d/br_netfilter.conf
+      overwrite: true
+      contents:
+        inline: |
+          br_netfilter
     - path: /etc/selinux/config
       overwrite: true
       contents:

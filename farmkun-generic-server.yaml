@@ -26,21 +26,22 @@ systemd:
         Type=oneshot
         RemainAfterExit=yes
         ExecStart=/bin/bash -c ' INSTALL_RKE2_METHOD=tar sh /etc/rancher/install.sh'
+        ExecStart=/bin/bash /etc/rancher/post-install.bash
         ExecStart=/bin/touch /var/lib/%N.stamp
 
         [Install]
         WantedBy=multi-user.target
     # Installing vim as a layered package with rpm-ostree
-    - name: farm.ram9.cc.service
+    - name: farmkun.ram9.cc.service
       enabled: true
       contents: |
         [Unit]
-        Description=Run Rancher Kubernetes according to machine role
+        Description=Run Rancher Kubernetes Server
         Wants=network-online.target
         After=install-rancher2-tar.service
         Before=zincati.service
         [Service]
-        ExecStart=/bin/bash /etc/rancher/post-install.bash
+        ExecStart=/bin/systemctl start --no-block --now rke2-server.service
         [Install]
         WantedBy=multi-user.target
     - name: rpm-ostree-install-packages.service
@@ -58,7 +59,7 @@ systemd:
         [Service]
         Type=oneshot
         RemainAfterExit=yes
-        ExecStart=/usr/bin/rpm-ostree install -y --allow-inactive vim tmux emacs zsh NetworkManager-wifi  iwlwifi-dvm-firmware iwlwifi-mvm-firmware
+        ExecStart=/usr/bin/rpm-ostree install -y --allow-inactive vim tmux emacs zsh podman helm NetworkManager-wifi iwlwifi-dvm-firmware iwlwifi-mvm-firmware
         ExecStart=/bin/touch /var/lib/%N.stamp
         ExecStart=/bin/systemctl --no-block reboot
 
@@ -104,17 +105,10 @@ storage:
       contents:
         inline: |
           #!/bin/env bash
-          # ease of use
-          /bin/ln -s /var/lib/rancher/rke2/bin/kubectl /usr/local/bin/kubectl
-          # ease of use
-          /bin/mkdir -p /root/.kube
-          /bin/ln -s /etc/rancher/rke2/rke2.yaml /root/.kube/config
-
           # clear prior configuration
           rm -rf /etc/rancher/node
           rm -rf /etc/rancher/rke2
           /bin/mkdir -p /etc/rancher/rke2
-
           # if cluster is already running it will respond with cacerts
           # and this isn't the first machine
           /bin/curl -fk https://farmkun.ram9.cc:9345/cacerts
@@ -131,22 +125,32 @@ storage:
             # INSTALL CONFIG
             /bin/chmod 600 /etc/rancher/rke2/config.yaml
           fi
+          # ease of use
+          /bin/ln -s /var/lib/rancher/rke2/bin/kubectl /usr/local/bin/kubectl
+          /bin/mkdir -p /root/.kube
+          /bin/ln -s /etc/rancher/rke2/rke2.yaml /root/.kube/config
+          # finally
           /bin/echo ">>>>I am farmbot - setting rke2-server"
           /bin/systemctl enable rke2-server.service
-          /bin/systemctl start --no-block --now rke2-server.service
       mode: 0744
-
+    - path: /etc/modules-load.d/ip6_tables.conf
+      overwrite: true
+      contents:
+        inline: |
+          ip6_tables
+    - path: /etc/modules-load.d/br_netfilter.conf
+      overwrite: true
+      contents:
+        inline: |
+          br_netfilter
     - path: /etc/selinux/config
       overwrite: true
       contents:
         local: selinux-config
-
     - path: /etc/rancher/install.sh
       overwrite: true
       contents:
         local: rke2-install.sh
-
-
     # Set vim as default editor
     # We use `zz-` as prefix to make sure this is processed last in order to
     # override any previously set defaults.
