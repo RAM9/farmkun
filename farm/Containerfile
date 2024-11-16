@@ -1,0 +1,2 @@
+FROM rtsp/lighttpd
+COPY index.html /var/www/html/index.html

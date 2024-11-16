@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: farm-hello-world
+  name: farm-deployment
   namespace: apps
   labels:
-    type: static-index
+    site: farm-ram9
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
-      type: static-index
+      site: farm-ram9
   template:
     metadata:
       labels:
-        type: static-index
+        site: farm-ram9
     spec:
       imagePullSecrets:
         - name: c8n-robotarmy   
       containers:
-        - name: static-index
-          image: c8n.io/robotarmy/hello-world:0.2
+        - name: farm-ram9
+          image: c8n.io/robotarmy/farm-site:0.1.1
           ports:
             - name: http
               containerPort: 80

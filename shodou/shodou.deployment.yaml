@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    type: static-index
     site: shodou
   name: shodou-deployment
   namespace: apps
@@ -10,7 +9,6 @@ spec:
   replicas: 2
   selector:
     matchLabels:
-      type: static-index
       site: shodou
   strategy:
     rollingUpdate:
@@ -20,11 +18,10 @@ spec:
   template:
     metadata:
       labels:
-        type: static-index
         site: shodou
     spec:
       containers:
-      - image: c8n.io/robotarmy/shodou-site:0.1
+      - image: c8n.io/robotarmy/shodou-site:0.1.0-lite
         imagePullPolicy: IfNotPresent
         name: shodou-site
         ports:
