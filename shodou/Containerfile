@@ -1,4 +1,2 @@
-#FROM nginx:1.27.2-alpine
-#COPY static /usr/share/nginx/html
 FROM rtsp/lighttpd
 COPY static /var/www/html

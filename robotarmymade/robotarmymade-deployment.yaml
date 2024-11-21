@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "2"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"type":"static-index"},"name":"farm-hello-world","namespace":"apps"},"spec":{"replicas":1,"selector":{"matchLabels":{"type":"static-index"}},"template":{"metadata":{"labels":{"type":"static-index"}},"spec":{"containers":[{"image":"c8n.io/robotarmy/hello-world:0.2","name":"static-index","ports":[{"containerPort":80,"name":"http","protocol":"TCP"}],"resources":{"limits":{"cpu":"300m","memory":"8Mi"},"requests":{"cpu":"200m","memory":"4Mi"}}}],"imagePullSecrets":[{"name":"c8n-robotarmy"}]}}}}
+  creationTimestamp: "2024-11-11T03:36:03Z"
+  generation: 2
+  labels:
+    type: static-index
+  name: farm-hello-world
+  namespace: apps
+  resourceVersion: "348808"
+  uid: 12aa9035-daaf-48f2-9948-9d55caf5b985
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      type: static-index
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        type: static-index
+    spec:
+      containers:
+      - image: c8n.io/robotarmy/hello-world:0.2
+        imagePullPolicy: IfNotPresent
+        name: static-index
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 300m
+            memory: 8Mi
+          requests:
+            cpu: 200m
+            memory: 4Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - name: c8n-robotarmy
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2024-11-11T03:41:30Z"
+    lastUpdateTime: "2024-11-11T03:41:30Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2024-11-11T03:36:03Z"
+    lastUpdateTime: "2024-11-11T03:41:30Z"
+    message: ReplicaSet "farm-hello-world-5fd786584d" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  observedGeneration: 2
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1
