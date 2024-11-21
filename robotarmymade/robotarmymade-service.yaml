@@ -1,28 +1,16 @@
 apiVersion: v1
 kind: Service
 metadata:
-  creationTimestamp: "2024-11-11T04:10:45Z"
   labels:
-    type: static-index
-  name: farm-hello-world-service
+    site: robotarmymade
+  name: robotarmymade-service
   namespace: apps
-  resourceVersion: "356633"
-  uid: e0d759ad-d88f-491f-a17a-eefd27dee382
 spec:
-  clusterIP: 10.43.193.116
-  clusterIPs:
-  - 10.43.193.116
-  internalTrafficPolicy: Cluster
-  ipFamilies:
-  - IPv4
-  ipFamilyPolicy: SingleStack
   ports:
   - port: 8080
     protocol: TCP
     targetPort: 80
   selector:
-    type: static-index
-  sessionAffinity: None
-  type: ClusterIP
+    site: robotarmymade
 status:
   loadBalancer: {}
