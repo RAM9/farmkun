@@ -21,7 +21,7 @@ spec:
         site: inshalla
     spec:
       containers:
-      - image: c8n.io/robotarmy/inshalla-site:0.1.0-lite
+      - image: c8n.io/robotarmy/inshalla-site:0.1.1
         imagePullPolicy: IfNotPresent
         name: inshalla-site
         ports:
