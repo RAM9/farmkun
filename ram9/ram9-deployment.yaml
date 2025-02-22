@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: farm-deployment
+  name: ram9-deployment
   namespace: apps
   labels:
-    site: farm-ram9
+    site: www-ram9-cc
 spec:
   replicas: 2
   selector:
     matchLabels:
-      site: farm-ram9
+      site: www-ram9-cc
   template:
     metadata:
       labels:
-        site: farm-ram9
+        site: www-ram9-cc
     spec:
       imagePullSecrets:
-        - name: c8n-robotarmy
+        - name: harbor-ram9-cc-r9 
       containers:
-        - name: farm-ram9
-          image: c8n.io/robotarmy/farm-site:0.1.1
+        - name: www-ram9-cc
+          image: harbor.ram9.cc/r9/ram9-site:0.1.0
           ports:
             - name: http
               containerPort: 80
