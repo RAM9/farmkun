@@ -11,6 +11,16 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
+  - host: www.robotarmyma.de
+    http:
+      paths:
+      - backend:
+          service:
+            name: robotarmymade-service
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
   - host: robotarmyma.de
     http:
       paths:
@@ -24,6 +34,7 @@ spec:
   tls:
   - hosts:
     - robotarmyma.de
+    - www.robotarmyma.de
     secretName: tls-de-robotarmyma
    
 

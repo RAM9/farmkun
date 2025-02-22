@@ -21,7 +21,7 @@ spec:
         site: robotarmymade
     spec:
       containers:
-      - image: c8n.io/robotarmy/robotarmymade-site:0.1.0-lite
+      - image: harbor.ram9.cc/r9/robotarmymade-site:0.1.2
         imagePullPolicy: IfNotPresent
         name: robotarmymade-site
         ports:
@@ -36,5 +36,5 @@ spec:
             cpu: 200m
             memory: 4Mi
       imagePullSecrets:
-      - name: c8n-robotarmy
+      - name: harbor-ram9-cc-r9
       restartPolicy: Always
