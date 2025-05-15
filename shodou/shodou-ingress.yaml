@@ -11,6 +11,16 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
+  - host: test.xn--7brq03m.net
+    http:
+      paths:
+      - backend:
+          service:
+            name: shodou-service
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
   - host: xn--7brq03m.net
     http:
       paths:
@@ -25,6 +35,7 @@ spec:
   - hosts:
     # 初道.net
     - xn--7brq03m.net
+    - test.xn--7brq03m.net
     secretName: tls-net-xn--7brq03m
    
 
